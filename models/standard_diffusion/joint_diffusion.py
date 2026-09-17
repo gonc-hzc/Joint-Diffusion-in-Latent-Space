@@ -97,6 +97,10 @@ class JointDiffusionNoisyClassifier(DDPM):
         if self.classification_start > 0:
             self.classification_start -= 1
 
+    def on_train_batch_end(self, *args, **kwargs):
+        """Prevent DDPM's model-only EMA update; this class tracks the full module."""
+        pass
+
     def get_input(self, batch, k):
         self.batch_classes = batch[self.classification_key]
         return super().get_input(batch, k)

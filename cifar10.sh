@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+export WANDB_MODE="${WANDB_MODE:-offline}"
+
 mkdir -p data/cl
 
 seed="${SEED:-12}"
