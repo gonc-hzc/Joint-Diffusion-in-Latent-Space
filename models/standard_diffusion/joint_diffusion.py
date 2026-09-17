@@ -90,9 +90,12 @@ class JointDiffusionNoisyClassifier(DDPM):
                 if context is not None:
                     print(f"{context}: Restored training weights")
 
-    def on_train_batch_end(self, *args, **kwargs):
+    def on_before_zero_grad(self, optimizer):
+        """Update optimizer-step state once, including with gradient accumulation."""
         if self.use_ema:
             self.model_ema(self)
+        if self.classification_start > 0:
+            self.classification_start -= 1
 
     def get_input(self, batch, k):
         self.batch_classes = batch[self.classification_key]
@@ -172,8 +175,6 @@ class JointDiffusionNoisyClassifier(DDPM):
                     [self.val_preds, self.batch_class_predictions.argmax(dim=1).detach().cpu()]
                 )
 
-        if self.classification_start > 0:
-            self.classification_start -= 1
         return loss, loss_dict
 
     def on_validation_epoch_end(self) -> None:

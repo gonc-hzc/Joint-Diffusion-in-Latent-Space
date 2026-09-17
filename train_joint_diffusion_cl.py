@@ -42,6 +42,18 @@ if __name__ == "__main__":
     parser.add_argument("--tags", type=str, required=False, help="Additional tags", nargs="+")
     parser.add_argument("--dir", "-d", type=str, required=False, help="Name for experiments log dir")
     parser.add_argument("--seed", "-s", type=int, required=False, help="Seed")
+    parser.add_argument(
+        "--batch-size",
+        type=int,
+        required=False,
+        help="Override train and validation batch size for controlled comparisons",
+    )
+    parser.add_argument(
+        "--accumulate-grad-batches",
+        type=int,
+        required=False,
+        help="Number of physical batches per optimizer step",
+    )
     args = parser.parse_args()
     config_path = str(args.path)
     checkpoint_path = str(args.checkpoint) if args.checkpoint is not None else None
@@ -54,11 +66,24 @@ if __name__ == "__main__":
     seed = args.seed if args.seed is not None else 42
 
     config = OmegaConf.load(config_path)
+    if args.batch_size is not None:
+        if args.batch_size < 1:
+            parser.error("--batch-size must be at least 1")
+        config.dataloaders.validation.batch_size = args.batch_size
+        for train_group in config.dataloaders.train:
+            for dataset_config in train_group.cl_split.datasets:
+                dataset_config.dataset.batch_size = args.batch_size
     seed_everything(seed)
 
     lightning_config = config.pop("lightning", OmegaConf.create())
 
     trainer_config = lightning_config.get("trainer", OmegaConf.create())
+    if args.accumulate_grad_batches is not None:
+        if args.accumulate_grad_batches < 1:
+            parser.error("--accumulate-grad-batches must be at least 1")
+        trainer_config["accumulate_grad_batches"] = args.accumulate_grad_batches
+        validation_period = trainer_config.get("check_val_every_n_epoch", 1)
+        trainer_config["check_val_every_n_epoch"] = validation_period * args.accumulate_grad_batches
     trainer_config["devices"] = -1
     trainer_opt = trainer_config
     lightning_config.trainer = trainer_config
@@ -130,6 +155,8 @@ if __name__ == "__main__":
             config.model.get("model_type"),
             f"task {current_task}",
             f"learned tasks {tasks_learned}",
+            f"physical batch {tasks_bs[0]}",
+            f"gradient accumulation {trainer_config.get('accumulate_grad_batches', 1)}",
         ]
     )
     trainer_kwargs["logger"] = pl.loggers.WandbLogger(
