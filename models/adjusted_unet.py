@@ -1,6 +1,37 @@
 import torch as th
-from ldm.modules.diffusionmodules.openaimodel import UNetModel
+from torch.utils.checkpoint import checkpoint as torch_checkpoint
+
+import ldm.modules.diffusionmodules.openaimodel as openaimodel
 from ldm.modules.diffusionmodules.util import timestep_embedding
+
+
+def _rng_safe_checkpoint(func, inputs, params, flag):
+    """Use PyTorch checkpointing while preserving the legacy LDM call API.
+
+    The LDM checkpoint implementation recomputes stochastic layers without
+    restoring their RNG state. That gives dropout a different mask during the
+    backward recomputation. PyTorch's non-reentrant implementation preserves
+    RNG state and also restores the autocast context used by the forward pass.
+
+    ``params`` is retained for API compatibility. The non-reentrant checkpoint
+    records the autograd graph and therefore does not need parameters passed as
+    explicit inputs.
+    """
+    del params
+    if not flag:
+        return func(*inputs)
+    return torch_checkpoint(
+        func,
+        *inputs,
+        use_reentrant=False,
+        preserve_rng_state=True,
+    )
+
+
+# ResBlock and AttentionBlock resolve this symbol from the openaimodel module
+# at call time, so the compatibility shim covers the complete AdjustedUNet.
+openaimodel.checkpoint = _rng_safe_checkpoint
+UNetModel = openaimodel.UNetModel
 
 
 class AdjustedUNet(UNetModel):
