@@ -18,9 +18,9 @@ dependencies:
   - kornia=0.7.3
   
   # PyTorch packages
-  - pytorch=2.4.1
-  - torchaudio=2.4.1
-  - torchvision=0.19.1
+  - pytorch=2.7.1
+  - torchaudio=2.7.1
+  - torchvision=0.22.1
 
   - pip:
       - albumentations==1.4.15
