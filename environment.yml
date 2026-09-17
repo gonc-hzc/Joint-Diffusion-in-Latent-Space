@@ -30,6 +30,7 @@ dependencies:
       - torch-fidelity==0.3.0
       - pytorch-fid==0.3.0
       - wandb==0.18.1
+      - albucore==0.0.16
 
       - -e git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers
       - -e git+https://github.com/openai/CLIP.git@main#egg=clip
