@@ -54,6 +54,12 @@ if __name__ == "__main__":
         required=False,
         help="Number of physical batches per optimizer step",
     )
+    parser.add_argument(
+        "--replay-sample-batch-size",
+        type=int,
+        required=False,
+        help="Generation batch size used while building the replay dataset",
+    )
     args = parser.parse_args()
     config_path = str(args.path)
     checkpoint_path = str(args.checkpoint) if args.checkpoint is not None else None
@@ -64,6 +70,8 @@ if __name__ == "__main__":
     tags = args.tags if args.tags is not None else []
     custom_dir = args.dir
     seed = args.seed if args.seed is not None else 42
+    if args.replay_sample_batch_size is not None and args.replay_sample_batch_size < 1:
+        parser.error("--replay-sample-batch-size must be at least 1")
 
     config = OmegaConf.load(config_path)
     if args.batch_size is not None:
@@ -101,7 +109,16 @@ if __name__ == "__main__":
 
     cl_config = config.pop("cl")
 
-    reply_buff = get_replay(cl_config.get("reply_type"))(train_bs=tasks_bs, sample_bs=2000, dl_num_workers=8)
+    replay_sample_batch_size = (
+        args.replay_sample_batch_size
+        if args.replay_sample_batch_size is not None
+        else cl_config.get("sample_batch_size", 2000)
+    )
+    reply_buff = get_replay(cl_config.get("reply_type"))(
+        train_bs=tasks_bs,
+        sample_bs=replay_sample_batch_size,
+        dl_num_workers=8,
+    )
 
     model_type = config.model.get("model_type")
     params = config.model.get("params", dict())
@@ -157,6 +174,7 @@ if __name__ == "__main__":
             f"learned tasks {tasks_learned}",
             f"physical batch {tasks_bs[0]}",
             f"gradient accumulation {trainer_config.get('accumulate_grad_batches', 1)}",
+            f"replay sample batch {replay_sample_batch_size}",
         ]
     )
     trainer_kwargs["logger"] = pl.loggers.WandbLogger(

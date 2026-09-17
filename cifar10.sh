@@ -9,6 +9,7 @@ mkdir -p data/cl
 seed="${SEED:-12}"
 batch_size="${BATCH_SIZE:-256}"
 grad_accum_steps="${GRAD_ACCUM_STEPS:-1}"
+replay_sample_batch_size="${REPLAY_SAMPLE_BATCH_SIZE:-1000}"
 experiment_suffix="${EXPERIMENT_SUFFIX:-}"
 
 if [[ -z "${experiment_suffix}" && ("${batch_size}" != "256" || "${grad_accum_steps}" != "1") ]]; then
@@ -16,7 +17,7 @@ if [[ -z "${experiment_suffix}" && ("${batch_size}" != "256" || "${grad_accum_st
 fi
 
 config_dir="configs/standard_diffusion/continual_learning/joint_diffusion_pooling/cifar10"
-common_args=(--seed "${seed}" --batch-size "${batch_size}" --accumulate-grad-batches "${grad_accum_steps}")
+common_args=(--seed "${seed}" --batch-size "${batch_size}" --accumulate-grad-batches "${grad_accum_steps}" --replay-sample-batch-size "${replay_sample_batch_size}")
 
 task1="CL_CIFAR10_SUP_TASK1_SEED${seed}${experiment_suffix}"
 task2="CL_CIFAR10_SUP_TASK2_SEED${seed}${experiment_suffix}"
