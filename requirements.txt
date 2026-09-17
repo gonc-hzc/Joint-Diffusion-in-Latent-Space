@@ -1,9 +1,9 @@
 --index-url https://download.pytorch.org/whl/cu128
-fsspec[http]==2024.12.0
 --extra-index-url https://pypi.org/simple
 torch==2.7.1+cu128
 torchaudio==2.7.1+cu128
 torchvision==0.22.1+cu128
+fsspec[http]==2024.12.0
 albumentations==1.4.15
 pytorch-lightning==2.4.0
 opencv-python==4.10.0.84
