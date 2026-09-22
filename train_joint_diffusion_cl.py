@@ -60,6 +60,18 @@ if __name__ == "__main__":
         required=False,
         help="Generation batch size used while building the replay dataset",
     )
+    parser.add_argument(
+        "--saved-samples",
+        type=Path,
+        required=False,
+        help="Use an existing replay image tensor instead of sampling new images",
+    )
+    parser.add_argument(
+        "--saved-labels",
+        type=Path,
+        required=False,
+        help="Labels corresponding to --saved-samples",
+    )
     args = parser.parse_args()
     config_path = str(args.path)
     checkpoint_path = str(args.checkpoint) if args.checkpoint is not None else None
@@ -72,6 +84,13 @@ if __name__ == "__main__":
     seed = args.seed if args.seed is not None else 42
     if args.replay_sample_batch_size is not None and args.replay_sample_batch_size < 1:
         parser.error("--replay-sample-batch-size must be at least 1")
+    if (args.saved_samples is None) != (args.saved_labels is None):
+        parser.error("--saved-samples and --saved-labels must be provided together")
+    if args.saved_samples is not None:
+        if not args.saved_samples.is_file():
+            parser.error(f"saved samples file does not exist: {args.saved_samples}")
+        if not args.saved_labels.is_file():
+            parser.error(f"saved labels file does not exist: {args.saved_labels}")
 
     config = OmegaConf.load(config_path)
     if args.batch_size is not None:
@@ -108,6 +127,9 @@ if __name__ == "__main__":
     )
 
     cl_config = config.pop("cl")
+    if args.saved_samples is not None:
+        cl_config["saved_samples"] = str(args.saved_samples)
+        cl_config["saved_labels"] = str(args.saved_labels)
 
     replay_sample_batch_size = (
         args.replay_sample_batch_size
