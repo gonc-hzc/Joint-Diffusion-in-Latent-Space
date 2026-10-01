@@ -1,0 +1,4 @@
+# Plotting dependencies used to create the included figures.
+# Install in the intended analysis environment.
+matplotlib==3.11.2
+numpy>=1.26

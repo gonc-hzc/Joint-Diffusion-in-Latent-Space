@@ -1,0 +1,154 @@
+# Derived from the existing CIFAR-10 single-task config for a 20-step learning exercise.
+# Uses a small validation subset and disables sampling callbacks.
+model:
+  base_learning_rate: 0.0002
+  model_type: joint_diffusion_augmentations
+  params:
+    clip_denoised: true
+    beta_schedule: sqrt_linear
+    linear_start: 0.001
+    linear_end: 0.02
+    log_every_t: 200
+    timesteps: 1000
+    first_stage_key: 0
+    image_size: 32
+    channels: 3
+    monitor: val/accuracy_ema
+    classification_loss_scale: 0.001
+    classifier_in_features: 3712
+    classifier_hidden: 1024
+    num_classes: 10
+    dropout: 0.1
+    classification_start: 0
+    augmentations: false
+    sampling_method: conditional_to_repr
+    sample_grad_scale: 0
+    unet_config:
+      target: models.AdjustedUNet
+      params:
+        image_size: 32
+        in_channels: 3
+        out_channels: 3
+        model_channels: 128
+        attention_resolutions:
+        - 2
+        - 4
+        num_res_blocks: 3
+        channel_mult:
+        - 1
+        - 2
+        - 2
+        - 2
+        num_heads: 4
+        dropout: 0.1
+        use_checkpoint: true
+        use_scale_shift_norm: true
+        pool_size: 10000
+cl:
+  reply_type: one_supervised_task
+  grad_scale: 0
+  samples_per_class: 5000
+  sampling_method: unconditional
+  weight_reinit: unused classes
+  mean:
+  - 0.5
+  - 0.5
+  - 0.5
+  std:
+  - 0.5
+  - 0.5
+  - 0.5
+dataloaders:
+  validation:
+    name: cifar10
+    root: data
+    split: test
+    download: true
+    batch_size: 16
+    num_workers: 16
+    sampler: none
+    shuffle: false
+    transforms:
+    - ToTensor: null
+    - Normalize:
+        mean:
+        - 0.5
+        - 0.5
+        - 0.5
+        std:
+        - 0.5
+        - 0.5
+        - 0.5
+  train:
+  - cl_split:
+      tasks:
+      - - 0
+        - 1
+      - - 2
+        - 3
+      - - 4
+        - 5
+      - - 6
+        - 7
+      - - 8
+        - 9
+      datasets:
+      - dataset:
+          name: cifar10
+          root: data
+          split: train
+          download: true
+          batch_size: 16
+          num_workers: 16
+          sampler: none
+          shuffle: true
+          transforms:
+          - ParallelTransforms:
+            - - ToPILImage: null
+              - RandomHorizontalFlip: null
+              - RandomResizedCrop:
+                  size: 32
+                  scale:
+                  - 0.85
+                  - 1.0
+                  antialias: true
+              - ToTensor: null
+              - Normalize:
+                  mean:
+                  - 0.5
+                  - 0.5
+                  - 0.5
+                  std:
+                  - 0.5
+                  - 0.5
+                  - 0.5
+            - - ToPILImage: null
+              - RandomHorizontalFlip: null
+              - RandomCrop:
+                  size: 32
+                  padding: 4
+                  padding_mode: reflect
+              - RandAugment:
+                  'n': 2
+                  m: 10
+              - ToTensor: null
+              - Normalize:
+                  mean:
+                  - 0.5
+                  - 0.5
+                  - 0.5
+                  std:
+                  - 0.5
+                  - 0.5
+                  - 0.5
+lightning:
+  trainer:
+    benchmark: false
+    enable_checkpointing: true
+    max_steps: 20
+    limit_val_batches: 2
+    val_check_interval: 10
+    check_val_every_n_epoch: 1
+    num_sanity_val_steps: 0
+    log_every_n_steps: 1
+  callbacks: {}

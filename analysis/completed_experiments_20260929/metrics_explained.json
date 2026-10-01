@@ -1,0 +1,105 @@
+{
+  "source": "results.json",
+  "scope": "Completed Task1-4 stage-end snapshot; Task1-5 excluded",
+  "selection": "last validation, EMA weights, global stage ends",
+  "accuracy_unit": "percent",
+  "change_unit": "percentage points",
+  "per_task_aggregation": "Approximate: original per-batch task accuracy aggregated by Lightning; Task1 uses audited seen-class conversion",
+  "aia_definition": "Unweighted average of stage-end seen-class overall accuracies",
+  "task_matrix_pct": [
+    [
+      99.74999725818634
+    ],
+    [
+      99.07717704772949,
+      89.6685242652893
+    ],
+    [
+      98.33523631095886,
+      38.95449340343475,
+      95.10894417762756
+    ],
+    [
+      98.47971796989441,
+      48.54957163333893,
+      84.68772172927856,
+      95.2734887599945
+    ]
+  ],
+  "stages": [
+    {
+      "stage": 1,
+      "name": "CL_CIFAR10_SUP_TASK1_SEED12",
+      "all10_accuracy_pct": 19.949999451637268,
+      "seen_accuracy_pct": 99.74999725818634,
+      "logged_task_macro_accuracy_pct_approx": 99.74999725818634,
+      "old_tasks_macro_accuracy_pct_approx": null,
+      "new_task_accuracy_pct_approx": 99.74999725818634,
+      "forgetting_pp_approx": null,
+      "backward_transfer_pp_approx": null,
+      "average_incremental_seen_accuracy_pct": 99.74999725818634,
+      "forgetting_by_old_task_pp_approx": [],
+      "backward_transfer_by_old_task_pp_approx": []
+    },
+    {
+      "stage": 2,
+      "name": "CL_CIFAR10_SUP_TASK1-2_SEED12",
+      "all10_accuracy_pct": 37.76000142097473,
+      "seen_accuracy_pct": 94.40000355243683,
+      "logged_task_macro_accuracy_pct_approx": 94.3728506565094,
+      "old_tasks_macro_accuracy_pct_approx": 99.07717704772949,
+      "new_task_accuracy_pct_approx": 89.6685242652893,
+      "forgetting_pp_approx": 0.6728202104568481,
+      "backward_transfer_pp_approx": -0.6728202104568481,
+      "average_incremental_seen_accuracy_pct": 97.07500040531158,
+      "forgetting_by_old_task_pp_approx": [
+        0.6728202104568481
+      ],
+      "backward_transfer_by_old_task_pp_approx": [
+        -0.6728202104568481
+      ]
+    },
+    {
+      "stage": 3,
+      "name": "CL_CIFAR10_SUP_TASK1-3_SEED12",
+      "all10_accuracy_pct": 46.459999680519104,
+      "seen_accuracy_pct": 77.43333280086517,
+      "logged_task_macro_accuracy_pct_approx": 77.46622463067372,
+      "old_tasks_macro_accuracy_pct_approx": 68.64486485719681,
+      "new_task_accuracy_pct_approx": 95.10894417762756,
+      "forgetting_pp_approx": 26.064395904541016,
+      "backward_transfer_pp_approx": -26.064395904541016,
+      "average_incremental_seen_accuracy_pct": 90.52777787049611,
+      "forgetting_by_old_task_pp_approx": [
+        1.414760947227478,
+        50.71403086185455
+      ],
+      "backward_transfer_by_old_task_pp_approx": [
+        -1.414760947227478,
+        -50.71403086185455
+      ]
+    },
+    {
+      "stage": 4,
+      "name": "CL_CIFAR10_SUP_TASK1-4_SEED12_RERUN_T1_4",
+      "all10_accuracy_pct": 65.420001745224,
+      "seen_accuracy_pct": 81.77500218153,
+      "logged_task_macro_accuracy_pct_approx": 81.7476250231266,
+      "old_tasks_macro_accuracy_pct_approx": 77.23900377750397,
+      "new_task_accuracy_pct_approx": 95.2734887599945,
+      "forgetting_pp_approx": 17.603484789530437,
+      "backward_transfer_pp_approx": -17.603484789530437,
+      "average_incremental_seen_accuracy_pct": 88.33958394825459,
+      "forgetting_by_old_task_pp_approx": [
+        1.2702792882919312,
+        41.11895263195038,
+        10.421222448348999
+      ],
+      "backward_transfer_by_old_task_pp_approx": [
+        -1.2702792882919312,
+        -41.11895263195038,
+        -10.421222448348999
+      ]
+    }
+  ]
+}

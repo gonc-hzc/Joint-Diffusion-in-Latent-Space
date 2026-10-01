@@ -1,0 +1,80 @@
+[
+  {
+    "name": "CL_CIFAR10_SUP_TASK1-2_SEED12",
+    "sha256_tensor": "5938a95ec18684069ed7cc9b6fd7c557a658631f9e4ac0435bae0fb849938c9d",
+    "sha256_labels": "8c30a14e1d6657fdacb507104768011e530af22d67e0181eb74fe921a22f5084",
+    "unique_images": 4000,
+    "total_images": 4000,
+    "unique_per_class": {
+      "0": 1000,
+      "1": 1000,
+      "2": 1000,
+      "3": 1000
+    },
+    "range": [
+      0.0,
+      1.0
+    ]
+  },
+  {
+    "name": "CL_CIFAR10_SUP_TASK1-3_SEED12",
+    "sha256_tensor": "6033c1ce82a84fbabd281a6fc3610a41686a83f12a9e905a5b922af4e1b4c6c4",
+    "sha256_labels": "3405d213affd4380d5463e9255d24ee68fd69a16ffdffd6331c85d560d117036",
+    "unique_images": 6000,
+    "total_images": 6000,
+    "unique_per_class": {
+      "0": 1000,
+      "1": 1000,
+      "2": 1000,
+      "3": 1000,
+      "4": 1000,
+      "5": 1000
+    },
+    "range": [
+      0.0,
+      1.0
+    ]
+  },
+  {
+    "name": "CL_CIFAR10_SUP_TASK1-4_SEED12_RERUN_T1_4",
+    "sha256_tensor": "4d8a039bf4d81b81c2f5973a20328fc7c91c4038c6b1081d109e4af3320628e1",
+    "sha256_labels": "714ba478b1dd1a143bcf45e587c9b51bdb90180364af08eaeace9e3be057a478",
+    "unique_images": 8000,
+    "total_images": 8000,
+    "unique_per_class": {
+      "0": 1000,
+      "1": 1000,
+      "2": 1000,
+      "3": 1000,
+      "4": 1000,
+      "5": 1000,
+      "6": 1000,
+      "7": 1000
+    },
+    "range": [
+      0.0,
+      1.0
+    ]
+  },
+  {
+    "name": "CL_CIFAR10_SUP_TASK1-4_SEED12",
+    "sha256_tensor": "4d8a039bf4d81b81c2f5973a20328fc7c91c4038c6b1081d109e4af3320628e1",
+    "sha256_labels": "714ba478b1dd1a143bcf45e587c9b51bdb90180364af08eaeace9e3be057a478",
+    "unique_images": 8000,
+    "total_images": 8000,
+    "unique_per_class": {
+      "0": 1000,
+      "1": 1000,
+      "2": 1000,
+      "3": 1000,
+      "4": 1000,
+      "5": 1000,
+      "6": 1000,
+      "7": 1000
+    },
+    "range": [
+      0.0,
+      1.0
+    ]
+  }
+]
